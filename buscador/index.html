@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buscador NF-e NuneX — notas de compra direto da SEFAZ, com XML e DANFE</title>
+<meta name="description" content="Receba sozinho, direto da SEFAZ, as notas fiscais de compra emitidas contra o CNPJ da sua empresa: XML, DANFE em PDF e planilha. Notas antigas pelo e-mail, exportação para o contador. 7 dias grátis.">
+<link rel="canonical" href="https://nunexsoft.com.br/buscador/">
+<meta name="theme-color" content="#012454">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/icone-32.png">
+<link rel="apple-touch-icon" href="../img/icone-celular.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="NuneXSoft">
+<meta property="og:title" content="Buscador NF-e NuneX — notas de compra direto da SEFAZ">
+<meta property="og:description" content="XML e DANFE das suas compras chegando sozinhos, sem esperar o e-mail do fornecedor. 7 dias grátis.">
+<meta property="og:url" content="https://nunexsoft.com.br/buscador/">
+<meta property="og:image" content="https://nunexsoft.com.br/img/buscador-painel.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;0,800;1,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Buscador NF-e NuneX",
+  "operatingSystem": "Windows 10, Windows 11", "applicationCategory": "BusinessApplication",
+  "offers": [{"@type": "Offer", "name": "Mensal", "price": "39.90", "priceCurrency": "BRL"},
+             {"@type": "Offer", "name": "Anual", "price": "399.00", "priceCurrency": "BRL"}],
+  "publisher": {"@type": "Organization", "name": "Team Fenix - NuneXSoft", "url": "https://nunexsoft.com.br/"}}
+</script>
+<style>
+:root{
+  --azul:#012454; --azul-2:#0a3878; --azul-3:#e8eef8;
+  --laranja:#fd9016; --laranja-2:#e57a00; --laranja-3:#fff3e3;
+  --texto:#1b2433; --suave:#5a6577; --linha:#dde3ee; --fundo:#f5f7fb; --branco:#fff;
+  --verde:#1fa855; --verde-2:#178a45;
+  --raio:16px; --sombra:0 10px 30px rgba(1,36,84,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--texto);background:var(--branco);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--azul-2)}
+h1,h2,h3{font-family:Montserrat,Inter,system-ui,sans-serif;color:var(--azul);line-height:1.2;margin:0 0 .5em}
+h1{font-size:clamp(2rem,4.6vw,3.25rem);font-weight:800}
+h2{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:800}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0 0 1em}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+.sec{padding:84px 0}
+.sec.cinza{background:var(--fundo)}
+.titulo{max-width:720px;margin:0 auto 48px;text-align:center}
+.titulo p{color:var(--suave);font-size:1.08rem}
+.chapeu{display:inline-block;font-family:Montserrat,sans-serif;font-weight:600;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--laranja-2);margin-bottom:10px}
+.x{color:var(--laranja);font-style:italic}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:600;font-size:1rem;text-decoration:none;border:2px solid transparent;transition:transform .15s,background .15s,box-shadow .15s;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+.btn-zap{background:var(--verde);color:#fff;box-shadow:0 8px 20px rgba(31,168,85,.30)}
+.btn-zap:hover{background:var(--verde-2)}
+.btn-borda{border-color:var(--azul);color:var(--azul);background:transparent}
+.btn-borda:hover{background:var(--azul);color:#fff}
+.btn svg{width:22px;height:22px;flex:none}
+
+/* topo */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--linha)}
+.topo{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+.topo .logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.topo .logo img{height:46px;width:46px}
+.marca{font-family:Montserrat,sans-serif;font-weight:800;font-style:italic;font-size:1.55rem;color:var(--azul);letter-spacing:-.02em;line-height:1;position:relative;padding-bottom:10px}
+.marca small{position:absolute;right:0;bottom:-2px;font-size:.62rem;font-style:italic;letter-spacing:.02em}
+
+/* cartões flutuando sobre a tela */
+.palco{position:relative}
+.flut{position:absolute;background:#fff;border-radius:14px;box-shadow:0 16px 36px rgba(1,36,84,.22);padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:.9rem;line-height:1.3;animation:boia 5s ease-in-out infinite}
+.flut b{display:block;color:var(--azul);font-family:Montserrat,sans-serif;font-size:1.02rem}
+.flut .bola{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none}
+.flut .bola svg{width:22px;height:22px}
+.flut.f1{top:-22px;left:-26px}
+.flut.f1 .bola{background:#e3f7ea;color:var(--verde)}
+.flut.f2{bottom:-26px;left:8%;animation-delay:-1.6s}
+.flut.f2 .bola{background:var(--laranja-3);color:var(--laranja-2)}
+.flut.f3{top:38%;right:-28px;animation-delay:-3.2s}
+.flut.f3 .bola{background:var(--azul-3);color:var(--azul-2)}
+@keyframes boia{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero{position:relative}
+.hero::before{content:"";position:absolute;right:-180px;top:-120px;width:620px;height:620px;border-radius:50%;border:34px solid var(--laranja);opacity:.10;pointer-events:none}
+
+/* botão de baixar, logo abaixo da tela */
+.baixar{text-align:center;margin-top:56px}
+.btn-baixar{background:var(--laranja);color:#fff;font-size:1.2rem;padding:18px 40px;box-shadow:0 12px 28px rgba(253,144,22,.35)}
+.btn-baixar:hover{background:var(--laranja-2)}
+.btn-baixar svg{width:26px;height:26px}
+.baixar-info{margin:14px 0 6px;color:var(--azul);font-weight:500}
+.baixar-dica{max-width:620px;margin:0 auto;color:var(--suave);font-size:.88rem}
+
+/* fechamento do caixa (ilustração) */
+.fecha{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.fecha .lista{list-style:none;padding:0;margin:20px 0 0}
+.fecha .lista li{display:flex;gap:12px;margin:12px 0;color:var(--suave)}
+.fecha .lista svg{width:22px;height:22px;color:var(--verde);flex:none;margin-top:3px}
+.cupom{background:#fff;max-width:420px;margin:0 auto;border-radius:18px;box-shadow:0 26px 60px rgba(1,36,84,.18);overflow:hidden;font-variant-numeric:tabular-nums}
+.cupom .cab{background:var(--azul);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+.cupom .cab b{font-family:Montserrat,sans-serif;font-size:1.05rem}
+.cupom .cab span{font-size:.85rem;color:#c9d6ee}
+.cupom .linhas{padding:10px 22px}
+.cupom .l{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--linha)}
+.cupom .l i{width:12px;height:12px;border-radius:3px;flex:none}
+.cupom .l span{flex:1}
+.cupom .l b{color:var(--azul)}
+.cupom .barra-v{height:10px;border-radius:99px;background:var(--azul-3);overflow:hidden;display:flex;margin:14px 0 6px}
+.cupom .barra-v i{display:block;height:100%}
+.cupom .tot{display:flex;justify-content:space-between;align-items:baseline;padding:16px 22px;background:var(--fundo)}
+.cupom .tot b{font-family:Montserrat,sans-serif;font-size:1.7rem;color:var(--azul)}
+.cupom .ok{display:flex;align-items:center;gap:8px;justify-content:center;padding:12px;background:#e3f7ea;color:var(--verde-2);font-weight:600}
+.cupom .ok svg{width:20px;height:20px}
+.cupom .nota{display:block;text-align:center;font-size:.78rem;color:var(--suave);padding:8px 0 12px;background:#fff}
+nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0}
+nav a{text-decoration:none;color:var(--texto);font-weight:500;font-size:.97rem;white-space:nowrap}
+nav a:hover{color:var(--laranja-2)}
+.topo .btn{padding:10px 18px;font-size:.92rem}
+.menu-btn{display:none;background:none;border:0;padding:8px;cursor:pointer;color:var(--azul)}
+.menu-btn svg{width:28px;height:28px}
+
+/* abertura */
+.hero{background:linear-gradient(180deg,#fff 0%,var(--azul-3) 100%);padding:64px 0 80px;overflow:hidden}
+.hero .grade{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.hero .sub{font-size:1.2rem;color:var(--suave);max-width:540px}
+.hero .pergunta{font-family:Montserrat,sans-serif;font-weight:600;color:var(--azul-2);font-size:1.1rem;margin-bottom:14px}
+.hero .acoes{display:flex;flex-wrap:wrap;gap:14px;margin:28px 0 22px}
+.selos{display:flex;flex-wrap:wrap;gap:10px 22px;padding:0;margin:0;list-style:none;color:var(--suave);font-size:.95rem}
+.selos li{display:flex;align-items:center;gap:8px}
+.selos svg{width:18px;height:18px;color:var(--verde);flex:none}
+.tela{border-radius:14px;overflow:hidden;box-shadow:0 30px 60px rgba(1,36,84,.28),0 0 0 1px rgba(1,36,84,.08);background:#0b1220}
+.tela .barra{height:28px;background:#1d2738;display:flex;align-items:center;gap:7px;padding:0 12px}
+.tela .barra i{width:10px;height:10px;border-radius:50%;background:#3a465c;display:block}
+.hero .tela{transform:perspective(1400px) rotateY(-6deg) rotateX(2deg)}
+
+/* recursos */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+.card{background:#fff;border:1px solid var(--linha);border-radius:var(--raio);padding:26px;transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:var(--sombra);transform:translateY(-3px)}
+.card .ico{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:var(--laranja-3);color:var(--laranja-2);margin-bottom:16px}
+.card .ico svg{width:26px;height:26px}
+.card p{color:var(--suave);margin:0;font-size:.98rem}
+
+/* telas */
+.galeria{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.galeria figure{margin:0;background:#fff;border-radius:var(--raio);overflow:hidden;border:1px solid var(--linha);cursor:zoom-in;transition:box-shadow .2s}
+.galeria figure:hover{box-shadow:var(--sombra)}
+.galeria img{aspect-ratio:16/10;object-fit:cover;object-position:top left;width:100%;background:#0b1220}
+.galeria figcaption{padding:14px 18px;font-size:.95rem;color:var(--suave)}
+.galeria figcaption b{display:block;color:var(--azul);font-family:Montserrat,sans-serif;font-weight:600}
+dialog{border:0;padding:0;background:transparent;max-width:min(1200px,94vw)}
+dialog::backdrop{background:rgba(1,20,48,.85)}
+dialog img{border-radius:10px;max-height:86vh;width:auto}
+dialog button{position:absolute;top:-44px;right:0;background:#fff;border:0;border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}
+
+/* para quem */
+.ramos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.ramo{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--linha);border-radius:12px;padding:14px 16px;font-weight:500}
+.ramo span{font-size:1.4rem;line-height:1}
+.aviso{margin-top:28px;background:var(--laranja-3);border-left:4px solid var(--laranja);border-radius:10px;padding:18px 20px;color:#6b3d00;font-size:.98rem}
+
+/* como funciona */
+.passos{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;counter-reset:p}
+.passo{position:relative;padding:26px 22px;background:#fff;border-radius:var(--raio);border:1px solid var(--linha)}
+.passo::before{counter-increment:p;content:counter(p);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--azul);color:#fff;font-family:Montserrat,sans-serif;font-weight:800;margin-bottom:14px}
+.passo p{color:var(--suave);margin:0;font-size:.97rem}
+
+/* planos */
+.planos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.plano{background:#fff;border:1px solid var(--linha);border-radius:20px;padding:30px 26px;display:flex;flex-direction:column;position:relative}
+.plano.destaque{border:2px solid var(--laranja);box-shadow:0 18px 40px rgba(253,144,22,.18)}
+.plano .selo{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--laranja);color:#fff;font-weight:600;font-size:.8rem;padding:5px 14px;border-radius:999px;white-space:nowrap}
+.plano h3{font-size:1.25rem;margin-bottom:6px}
+.plano .desc{color:var(--suave);font-size:.95rem;min-height:3em}
+.preco{font-family:Montserrat,sans-serif;color:var(--azul);margin:10px 0 18px}
+.preco b{font-size:2.4rem;font-weight:800}
+.preco small{font-size:1rem;color:var(--suave);font-weight:600}
+.plano ul{list-style:none;padding:0;margin:0 0 24px;flex:1}
+.plano li{display:flex;gap:10px;align-items:flex-start;padding:6px 0;font-size:.96rem}
+.plano li svg{width:18px;height:18px;color:var(--verde);flex:none;margin-top:4px}
+.plano .btn{width:100%}
+.planos.dois{grid-template-columns:1fr 1fr;max-width:900px;margin:0 auto}
+.preco small{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
+.preco{margin-bottom:6px}
+.mensal{font-weight:600;color:var(--laranja-2);margin-bottom:18px;min-height:1.6em}
+.mensal b{font-family:Montserrat,sans-serif;font-size:1.15rem}
+.extra{max-width:900px;margin-left:auto;margin-right:auto}
+.obs{max-width:900px;margin:18px auto 0;color:var(--suave);font-size:.95rem;background:var(--fundo);border-radius:12px;padding:16px 20px}
+.extra{margin-top:22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;background:var(--azul);color:#fff;border-radius:20px;padding:26px 30px}
+.extra h3{color:#fff;margin:0 0 4px}
+.extra p{margin:0;color:#c9d6ee}
+.extra .valor{font-family:Montserrat,sans-serif;font-weight:800;font-size:1.9rem;color:var(--laranja)}
+.extra .valor small{font-size:.95rem;color:#c9d6ee;font-weight:600}
+
+/* requisitos */
+.req{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.req .card ul{margin:0;padding-left:20px;color:var(--suave)}
+.req .card li{margin:4px 0}
+
+/* dúvidas */
+.faq{max-width:820px;margin:0 auto}
+details{background:#fff;border:1px solid var(--linha);border-radius:14px;margin-bottom:12px;padding:0 22px}
+summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:600;color:var(--azul);display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--laranja-2);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--suave);margin:0 0 18px}
+
+/* quem somos */
+.quem{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;max-width:900px;margin:0 auto}
+.quem img{width:180px}
+.frase{font-family:Montserrat,sans-serif;font-weight:800;font-style:italic;color:var(--laranja-2);font-size:1.3rem}
+
+/* chamada final */
+.final{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-2) 100%);color:#fff;text-align:center;padding:80px 0}
+.final h2{color:#fff}
+.final p{color:#c9d6ee;font-size:1.1rem;max-width:600px;margin:0 auto 28px}
+
+/* rodapé */
+footer{background:#00183a;color:#9fb0cc;padding:48px 0 30px;font-size:.95rem}
+footer .grade{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:32px;margin-bottom:30px}
+footer h3{color:#fff;font-size:1rem}
+footer a{color:#dfe7f5;text-decoration:none}
+footer a:hover{color:var(--laranja)}
+footer ul{list-style:none;padding:0;margin:0}
+footer li{margin:6px 0}
+footer .base{border-top:1px solid #163360;padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:.88rem}
+.marca-branca{background:#fff;border-radius:12px;padding:8px 12px;display:inline-block;margin-bottom:14px}
+.marca-branca img{height:44px;width:auto}
+
+/* botão flutuante */
+.zap-flutua{position:fixed;right:20px;bottom:20px;z-index:60;width:62px;height:62px;border-radius:50%;background:var(--verde);display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.25);transition:transform .15s}
+.zap-flutua:hover{transform:scale(1.08)}
+.zap-flutua svg{width:34px;height:34px;color:#fff}
+
+/* telas menores */
+/* o resumo no celular (Telegram) */
+.cel{width:300px;max-width:100%;margin:0 auto;background:#111827;border-radius:40px;padding:12px;box-shadow:0 30px 60px rgba(1,36,84,.28)}
+.cel .tela-c{background:#d6e4c8 linear-gradient(160deg,#cfe0bf,#a9c99a);border-radius:30px;overflow:hidden;font-family:Inter,system-ui,sans-serif}
+.cel .bar{background:#fff;display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid #e5e7eb}
+.cel .av{width:36px;height:36px;border-radius:50%;background:#229ED9;color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.cel .bar b{display:block;font-size:.92rem;color:#111;line-height:1.2}
+.cel .bar small{color:#8a94a6;font-size:.75rem}
+.cel .msgs{padding:14px 12px 18px}
+.cel .bal{background:#fff;border-radius:14px 14px 14px 4px;padding:10px 12px 6px;font-size:.8rem;line-height:1.45;color:#111;box-shadow:0 1px 2px rgba(0,0,0,.12);font-variant-numeric:tabular-nums}
+.cel .bal .h{font-weight:700}
+.cel .bal hr{border:0;border-top:2px solid #111;width:70%;margin:6px 0}
+.cel .bal .hora{display:block;text-align:right;color:#8a94a6;font-size:.68rem}
+.cel .chega{display:inline-block;background:rgba(0,0,0,.25);color:#fff;font-size:.7rem;border-radius:10px;padding:2px 10px;margin:0 auto 10px}
+.cel .msgs .centro{text-align:center}
+.selo-gratis{display:inline-flex;align-items:center;gap:8px;background:#e6f4fb;color:#0f6f9e;font-weight:600;font-size:.9rem;border-radius:999px;padding:6px 14px;margin-top:8px}
+.selo-gratis svg{width:18px;height:18px}
+@media (max-width:980px){
+  .hero .grade{grid-template-columns:1fr}
+  .hero .tela{transform:none}
+  .fecha{grid-template-columns:1fr;gap:36px}
+  .flut.f3{right:-8px}
+  .flut.f1{left:-8px}
+  .passos{grid-template-columns:1fr 1fr}
+  .planos,.planos.dois{grid-template-columns:1fr;max-width:480px;margin:0 auto}
+  .planos.dois .plano.destaque{margin-top:10px}
+  .galeria{grid-template-columns:1fr 1fr}
+  footer .grade{grid-template-columns:1fr 1fr}
+}
+@media (max-width:1100px){
+  nav{display:none;position:absolute;top:72px;left:0;right:0;background:#fff;border-bottom:1px solid var(--linha);box-shadow:var(--sombra)}
+  nav.aberto{display:block}
+  nav ul{flex-direction:column;gap:0;padding:8px 20px 16px}
+  nav a{display:block;padding:12px 0;border-bottom:1px solid var(--linha)}
+  .menu-btn{display:block}
+  .topo .btn{display:none}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  .sec{padding:60px 0}
+  .hero{padding:40px 0 56px}
+  .hero .acoes .btn{width:100%}
+  .passos,.galeria,.req,footer .grade{grid-template-columns:1fr}
+  .quem{grid-template-columns:1fr;text-align:center;gap:20px}
+  .quem img{margin:0 auto;width:140px}
+  .extra{flex-direction:column;align-items:flex-start}
+  .topo .logo img{height:40px;width:40px}
+  .marca{font-size:1.35rem}
+  .flut{padding:8px 12px;font-size:.78rem;gap:8px}
+  .flut b{font-size:.9rem}
+  .flut .bola{width:30px;height:30px}
+  .flut .bola svg{width:18px;height:18px}
+  .flut.f2{display:none}
+  .hero .palco{margin:10px 6px 0}
+  .hero::before{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<style>
+.regra{max-width:860px;margin:28px auto 0;border:3px solid #d29922;background:#fff8e6;border-radius:14px;padding:18px 22px;color:#3a2a00}
+.regra b.t{display:block;color:#a86b00;font-family:Montserrat,sans-serif;font-size:1.15rem;margin-bottom:6px}
+.tabela-origem{width:100%;border-collapse:collapse;margin-top:18px;background:#fff;border-radius:12px;overflow:hidden}
+.tabela-origem th,.tabela-origem td{padding:12px 14px;border-bottom:1px solid #e3e8f0;text-align:left;vertical-align:top}
+.tabela-origem th{background:#012454;color:#fff}
+.planos.tres{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-zap" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91A9.9 9.9 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.29Z"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5 10 17 19 7"/></symbol>
+  <symbol id="i-bip" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6v12M7 6v12M10 6v12M14 6v12M17 6v12M20 6v12"/></g></symbol>
+  <symbol id="i-pix" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20h1M20 14h1"/></g></symbol>
+  <symbol id="i-caixa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><circle cx="12" cy="12.5" r="3"/><path d="M6 9.5v6M18 9.5v6"/></g></symbol>
+  <symbol id="i-fiado" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h5"/></g></symbol>
+  <symbol id="i-estoque" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></g></symbol>
+  <symbol id="i-etiqueta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></g></symbol>
+  <symbol id="i-grafico" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/></g></symbol>
+  <symbol id="i-contador" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2"/></g></symbol>
+  <symbol id="i-offline" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></g></symbol>
+  <symbol id="i-cadeado" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></g></symbol>
+  <symbol id="i-rede" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="3" width="9" height="7" rx="1"/><rect x="13" y="14" width="9" height="7" rx="1"/><rect x="2" y="14" width="9" height="7" rx="1"/><path d="M6.5 10v4M11 17.5h2M17.5 14v-3H6.5"/></g></symbol>
+  <symbol id="i-baixar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></g></symbol>
+  <symbol id="i-celular" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3M9 7.5l2 2 4-4"/></g></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap topo">
+    <a class="logo" href="../" aria-label="NuneXSoft — início"><img src="../img/icone-180.png" alt="" width="46" height="46"><span class="marca">Nune<span class="x">X</span>Soft<small>Brasil</small></span></a>
+    <nav id="menu" aria-label="Menu principal">
+      <ul>
+        <li><a href="#recursos">O que faz</a></li>
+        <li><a href="#antigas">Notas antigas</a></li>
+        <li><a href="#telas">Telas</a></li>
+        <li><a href="#planos">Planos</a></li>
+        <li><a href="#baixar">Baixar</a></li>
+        <li><a href="#duvidas">Dúvidas</a></li>
+        <li><a href="../">NuneXSoft</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-zap" href="https://wa.me/5533991740421?text=Ol%C3%A1!%20Quero%20conhecer%20o%20Buscador%20NF-e%20NuneX." target="_blank" rel="noopener"><svg><use href="#i-zap"/></svg>Falar no WhatsApp</a>
+    <button class="menu-btn" aria-label="Abrir menu" aria-controls="menu" aria-expanded="false"><svg><use href="#i-menu"/></svg></button>
+  </div>
+</header>
+
+<main id="inicio">
+
+<section class="hero">
+  <div class="wrap grade">
+    <div>
+      <span class="chapeu">Buscador NF-e NuneX</span>
+      <p class="pergunta">Esperando o fornecedor mandar o XML da nota por e-mail? Ou ele esqueceu de mandar?</p>
+      <h1>As suas notas de compra chegam sozinhas.</h1>
+      <p class="sub">Direto da SEFAZ: o <b>XML</b>, o <b>DANFE em PDF</b> e uma planilha de todas as notas emitidas contra o CNPJ da sua empresa — muitas vezes antes da mercadoria chegar.</p>
+      <div class="acoes">
+        <a class="btn btn-baixar" href="#baixar"><svg><use href="#i-baixar"/></svg>Testar 7 dias grátis</a>
+        <a class="btn btn-borda" href="#planos">Ver planos e preços</a>
+      </div>
+      <ul class="selos">
+        <li><svg><use href="#i-ok"/></svg>7 dias grátis, sem cadastro</li>
+        <li><svg><use href="#i-ok"/></svg>Notas antigas pelo e-mail</li>
+        <li><svg><use href="#i-ok"/></svg>Suporte pelo AnyDesk</li>
+      </ul>
+    </div>
+    <div class="palco">
+      <div class="tela">
+        <div class="barra"><i></i><i></i><i></i></div>
+        <img src="../img/buscador-painel.webp" alt="Tela principal do Buscador NF-e NuneX com as notas de compra" width="1280" height="820" fetchpriority="high">
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="regra">
+      <b class="t">⏱ Busca automática: uma vez por hora</b>
+      A SEFAZ permite <b>uma consulta por hora</b> para cada empresa — consultar mais que isso bloqueia o computador.
+      Por isso o Buscador busca <b>sozinho, de hora em hora</b>, sem ninguém precisar clicar. Chegou nota nova, aparece um aviso perto do relógio do Windows.
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="recursos">
+  <div class="wrap">
+    <div class="titulo">
+      <span class="chapeu">O que faz</span>
+      <h2>Tudo o que o contador e o estoque precisam</h2>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="ico"><svg><use href="#i-baixar"/></svg></div><h3>XML direto da SEFAZ</h3><p>Com o certificado digital A1 da empresa, as notas de compra chegam sem depender do fornecedor.</p></div>
+      <div class="card"><div class="ico"><svg><use href="#i-fiado"/></svg></div><h3>DANFE em PDF</h3><p>Cada nota já vem com o DANFE pronto: dois cliques e você confere a mercadoria.</p></div>
+      <div class="card"><div class="ico"><svg><use href="#i-grafico"/></svg></div><h3>Painel do mês</h3><p>Quantas notas, total comprado, notas aguardando e canceladas — por mês ou entre datas.</p></div>
+      <div class="card"><div class="ico"><svg><use href="#i-contador"/></svg></div><h3>Para o contador</h3><p>Escolha o período e exporte um .zip com os XMLs e a planilha, pronto para mandar.</p></div>
+      <div class="card"><div class="ico"><svg><use href="#i-ok"/></svg></div><h3>Ciência automática</h3><p>Quando a SEFAZ entrega só o resumo, o Buscador avisa a SEFAZ e o XML completo chega em seguida.</p></div>
+      <div class="card"><div class="ico"><svg><use href="#i-cadeado"/></svg></div><h3>Seguro</h3><p>A senha do certificado fica cifrada pelo próprio Windows. Suas notas ficam no seu computador.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec cinza" id="antigas">
+  <div class="wrap">
+    <div class="titulo">
+      <span class="chapeu">Notas antigas</span>
+      <h2>Precisa das notas de janeiro? Tem jeito.</h2>
+      <p>A SEFAZ só entrega os últimos 90 dias — é regra dela, igual para todos os programas. Mas o fornecedor é obrigado a mandar o XML ao comprador, e quase sempre manda por e-mail. O Buscador busca lá.</p>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="tabela-origem">
+      <tr><th>De onde</th><th>Até quando</th><th>Como</th></tr>
+      <tr><td><b>SEFAZ</b></td><td>últimos 90 dias</td><td>Sozinho, de hora em hora. Na primeira vez traz os 90 dias inteiros.</td></tr>
+      <tr><td><b>E-mail da empresa</b></td><td>qualquer época</td><td>Você escolhe o período (ex.: 01/01 a 15/02) e o Buscador lê os XMLs anexos — sem apagar nem marcar nada.</td></tr>
+      <tr><td><b>Pasta do computador</b></td><td>qualquer época</td><td>Downloads, pendrive, a pasta do contador: ele procura e junta tudo.</td></tr>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="telas">
+  <div class="wrap">
+    <div class="titulo">
+      <span class="chapeu">Veja por dentro</span>
+      <h2>Telas do Buscador</h2>
+      <p>Clique numa tela para ver maior.</p>
+    </div>
+    <div class="galeria">
+      <figure><img src="../img/buscador-painel.webp" alt="Painel com as notas de compra do mês" width="1280" height="820" loading="lazy"><figcaption><b>Painel</b>As notas do mês, total comprado e situação.</figcaption></figure>
+      <figure><img src="../img/buscador-periodo.webp" alt="Filtro por período com datas de e até" width="1280" height="820" loading="lazy"><figcaption><b>Período</b>Este mês, mês passado ou entre datas.</figcaption></figure>
+      <figure><img src="../img/buscador-notas-antigas.webp" alt="Busca de notas antigas pelo e-mail da empresa" width="900" height="878" loading="lazy"><figcaption><b>Notas antigas</b>Pelo e-mail, no período que você escolher.</figcaption></figure>
+      <figure><img src="../img/buscador-configuracoes.webp" alt="Configuração do certificado digital A1" width="930" height="1053" loading="lazy"><figcaption><b>Configuração</b>Escolha o certificado A1 e pronto.</figcaption></figure>
+      <figure><img src="../img/buscador-assinatura.webp" alt="Tela da assinatura com QR Code do Mercado Pago" width="562" height="653" loading="lazy"><figcaption><b>Assinatura</b>Pague pelo QR Code e ative na hora.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="sec cinza" id="planos">
+  <div class="wrap">
+    <div class="titulo">
+      <span class="chapeu">Planos</span>
+      <h2>Comece com 7 dias grátis</h2>
+      <p>Instale, use tudo por 7 dias sem pagar nada. Gostou? Escolha o plano. Todos com o programa completo para 1 computador.</p>
+    </div>
+    <div class="planos tres">
+      <div class="plano">
+        <h3>Mensal</h3>
+        <p class="desc">Pague mês a mês, sem fidelidade.</p>
+        <div class="preco"><small>por mês</small><br><b>R$ 39,90</b></div>
+        <ul>
+          <li><svg><use href="#i-ok"/></svg>Notas da SEFAZ de hora em hora</li>
+          <li><svg><use href="#i-ok"/></svg>Notas antigas pelo e-mail</li>
+          <li><svg><use href="#i-ok"/></svg>Suporte pelo WhatsApp e AnyDesk</li>
+        </ul>
+        <a class="btn btn-borda" href="https://wa.me/5533991740421?text=Ol%C3%A1!%20Quero%20assinar%20o%20Buscador%20NF-e%20NuneX%20(mensal)." target="_blank" rel="noopener">Quero o mensal</a>
+      </div>
+      <div class="plano destaque">
+        <span class="selo">2 meses grátis</span>
+        <h3>Anual</h3>
+        <p class="desc">Um ano inteiro pagando 10 meses.</p>
+        <div class="preco"><small>por ano</small><br><b>R$ 399,00</b></div>
+        <ul>
+          <li><svg><use href="#i-ok"/></svg>Tudo do plano mensal</li>
+          <li><svg><use href="#i-ok"/></svg>Economia de R$ 79,80</li>
+          <li><svg><use href="#i-ok"/></svg>Sem se preocupar todo mês</li>
+        </ul>
+        <a class="btn btn-zap" href="https://wa.me/5533991740421?text=Ol%C3%A1!%20Quero%20assinar%20o%20Buscador%20NF-e%20NuneX%20(anual)." target="_blank" rel="noopener"><svg><use href="#i-zap"/></svg>Quero o anual</a>
+      </div>
+      <div class="plano">
+        <h3>Cliente NuneXSoft</h3>
+        <p class="desc">Já usa o NuneXSoft? Tem desconto.</p>
+        <div class="preco"><small>por mês</small><br><b>R$ 29,90</b></div>
+        <div class="mensal">ou <b>R$ 299,00</b> por ano</div>
+        <ul>
+          <li><svg><use href="#i-ok"/></svg>Tudo do plano mensal</li>
+          <li><svg><use href="#i-ok"/></svg>Os XMLs prontos para a entrada de mercadorias</li>
+        </ul>
+        <a class="btn btn-borda" href="https://wa.me/5533991740421?text=Ol%C3%A1!%20Sou%20cliente%20NuneXSoft%20e%20quero%20o%20Buscador%20NF-e." target="_blank" rel="noopener">Sou cliente NuneXSoft</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:18px">Atendimento avulso: <b>R$ 50,00</b> por atendimento, quando você precisar.</p>
+  </div>
+</section>
+
+<section class="sec cinza" id="baixar">
+  <div class="wrap baixar">
+    <a class="btn btn-baixar" href="https://github.com/nunexsoft/site/releases/download/buscador-v1.0/Buscador-NFe-NuneX-Setup.exe"><svg><use href="#i-baixar"/></svg>Baixar o Buscador NF-e NuneX</a>
+    <p class="baixar-info">Versão <b>1.0</b> · <b>7 dias grátis</b> · Windows 10 ou 11 (64 bits) · instalador de cerca de 46 MB</p>
+    <p class="baixar-dica">Rode o <b>Buscador-NFe-NuneX-Setup.exe</b>. Se o Windows mostrar “O Windows protegeu o computador”, clique em <b>Mais informações</b> e depois em <b>Executar assim mesmo</b>. Você vai precisar do <b>certificado digital A1</b> da empresa (arquivo .pfx) e da senha dele — normalmente o contador tem. Na dúvida, <a href="https://wa.me/5533991740421?text=Ol%C3%A1!%20Quero%20conhecer%20o%20Buscador%20NF-e%20NuneX." target="_blank" rel="noopener">chame a gente no WhatsApp</a> que instalamos para você.</p>
+  </div>
+</section>
+
+<section class="sec" id="duvidas">
+  <div class="wrap">
+    <div class="titulo">
+      <span class="chapeu">Dúvidas</span>
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <div class="faq">
+      <details><summary>Preciso de certificado digital?</summary><p>Sim, o certificado A1 da empresa (arquivo .pfx), o mesmo que o contador usa. O certificado A3 (cartão ou token) não é aceito: ele precisa ficar conectado e pede senha, o que impede a busca automática.</p></details>
+      <details><summary>Por que só uma busca por hora?</summary><p>É regra da SEFAZ: mais de uma consulta por hora para a mesma empresa bloqueia o computador por um tempo. O Buscador respeita isso sozinho e busca de hora em hora, sem ninguém precisar clicar.</p></details>
+      <details><summary>Consigo as notas de meses atrás?</summary><p>A SEFAZ só entrega os últimos 90 dias. As notas mais antigas o Buscador traz do e-mail da empresa (o fornecedor manda o XML a cada venda) ou de uma pasta do computador, no período que você escolher.</p></details>
+      <details><summary>O que acontece depois dos 7 dias grátis?</summary><p>As buscas param até você assinar — mas as notas que já chegaram continuam no programa para ver, abrir e exportar. Assinou, volta tudo na hora.</p></details>
+      <details><summary>Como pago e ativo?</summary><p>Na própria tela do Buscador: escolha o plano, pague pelo Mercado Pago (tem QR Code), mande o comprovante e o código do computador pelo WhatsApp e cole a chave que você recebe.</p></details>
+      <details><summary>Funciona com o NuneXSoft?</summary><p>Sim. O NuneXSoft já importa o XML da nota do fornecedor na entrada de mercadorias — com o Buscador, o XML já está no computador quando a mercadoria chega. E cliente NuneXSoft paga menos.</p></details>
+      <details><summary>Aparecem as notas de venda da minha loja?</summary><p>Não: o Buscador é para as notas de <b>compra</b>, emitidas contra o CNPJ da sua empresa.</p></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="grade">
+      <div>
+        <span class="marca-branca"><img src="../img/logo-nunexsoft.png" alt="NuneXSoft Brasil" width="260" height="171" loading="lazy"></span>
+        <p>Controle de estoque e vendas para MEI e pequenas lojas. Atendimento a distância para todo o Brasil.</p>
+      </div>
+      <div>
+        <h3>Contato</h3>
+        <ul>
+          <li><a href="https://wa.me/5533991740421" target="_blank" rel="noopener">WhatsApp (33) 99174-0421</a></li>
+          <li><a href="mailto:simplixbrasil@gmail.com">simplixbrasil@gmail.com</a></li>
+          <li>Itaobim — MG</li>
+          <li><a href="https://g.page/r/CaAMDlVdu7CqEBM/review" target="_blank" rel="noopener">Avalie a gente no Google ★</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Horário de atendimento</h3>
+        <ul>
+          <li>Segunda a sexta: 08:00–11:00 e 13:30–18:00</li>
+          <li>Sábado: 08:30–12:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="base">
+      <span>© <span id="ano">2026</span> Team Fenix · NuneXSoft</span>
+      <span>nunexsoft.com.br</span>
+    </div>
+  </div>
+</footer>
+
+<a class="zap-flutua" href="https://wa.me/5533991740421?text=Ol%C3%A1!%20Quero%20conhecer%20o%20Buscador%20NF-e%20NuneX." target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><svg><use href="#i-zap"/></svg></a>
+
+<dialog id="zoom"><button type="button">Fechar ✕</button><img alt=""></dialog>
+
+<script>
+// menu no celular
+const btn = document.querySelector('.menu-btn'), menu = document.getElementById('menu');
+btn.addEventListener('click', () => {
+  const aberto = menu.classList.toggle('aberto');
+  btn.setAttribute('aria-expanded', aberto);
+});
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  menu.classList.remove('aberto'); btn.setAttribute('aria-expanded', false);
+}));
+// ver a tela maior
+const zoom = document.getElementById('zoom'), zimg = zoom.querySelector('img');
+document.querySelectorAll('.galeria figure').forEach(f => f.addEventListener('click', () => {
+  const i = f.querySelector('img'); zimg.src = i.src; zimg.alt = i.alt; zoom.showModal();
+}));
+zoom.addEventListener('click', () => zoom.close());
+document.getElementById('ano').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
