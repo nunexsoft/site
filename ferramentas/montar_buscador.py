@@ -21,7 +21,7 @@ script = re.search(r"<script>\s*// menu no celular.*?</script>", base, re.S).gro
 rodape = rodape.replace('src="img/', 'src="../img/')
 
 DOWNLOAD = "https://github.com/nunexsoft/site/releases/download/buscador-v1.0/Buscador-NFe-NuneX-Setup.exe"
-ZAP = "https://wa.me/5533991740421?text="
+ZAP = "https://wa.me/5533997078714?text="
 MSG = {
     "conhecer": "Ol%C3%A1!%20Quero%20conhecer%20o%20Buscador%20NF-e%20NuneX.",
     "mensal": "Ol%C3%A1!%20Quero%20assinar%20o%20Buscador%20NF-e%20NuneX%20(mensal).",
